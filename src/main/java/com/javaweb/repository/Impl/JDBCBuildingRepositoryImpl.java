@@ -11,6 +11,11 @@ import java.util.List;
 import java.util.Map;
 import java.util.stream.Collectors;
 
+import javax.persistence.EntityManager;
+import javax.persistence.PersistenceContext;
+import javax.persistence.PersistenceContexts;
+import javax.persistence.Query;
+
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.PropertySource;
 import org.springframework.stereotype.Repository;
@@ -35,6 +40,10 @@ public class JDBCBuildingRepositoryImpl implements BuildingRepository {
 	
 	@Value("${spring.datasource.password}") 
 		private String PASS;
+	
+	@PersistenceContext
+	EntityManager entityManager;
+	
 	
 	public static void joinTable(BuildingSearchBuilder buildingSearchBuilder, StringBuilder sql) {
 		Long staffId = buildingSearchBuilder.getStaffId();
@@ -122,31 +131,9 @@ public class JDBCBuildingRepositoryImpl implements BuildingRepository {
 		StringBuilder where = new StringBuilder(" WHERE 1=1 ");
 		queryNormal(buildingSearchBuilder, where);
 		querySpecial(buildingSearchBuilder, where);
+		sql.append(" GROUP BY b.id;");
 		sql.append(where);
-		List<BuildingEntity> result = new ArrayList<>();
-		try(Connection conn = ConnectionJDBCUltil.getConnection();
-				Statement stmt = conn.createStatement();
-				ResultSet rs = stmt.executeQuery(sql.toString());) {
-			
-			while (rs.next()) {
-				BuildingEntity buildingEntity = new BuildingEntity();
-	            buildingEntity.setId(rs.getLong("id")); 
-	            buildingEntity.setName(rs.getString("name")); 
-	            buildingEntity.setWard(rs.getString("ward")); 
-//	            buildingEntity.setDistrictid(rs.getLong("districtid")); 
-	            buildingEntity.setStreet(rs.getString("street")); 
-	            buildingEntity.setFloorArea(rs.getLong("floorarea")); 
-	          //buildingEntity.setRentPrice(rs.getLong("rentprice")); 
-	            buildingEntity.setServicefee(rs.getString("servicefee")); 
-	            buildingEntity.setBrokerageFee(rs.getLong("brokeragefee")); 
-	            buildingEntity.setManagerName(rs.getString("managername")); 
-	            buildingEntity.setManagerPhoneNumber(rs.getString("managerphonenumber"));
-
-	            result.add(buildingEntity);
-		}
-	} catch (SQLException e) {
-		e.printStackTrace();
-	}
-		return result;
+		Query query = entityManager.createNativeQuery(sql.toString(), BuildingEntity.class);
+		return query.getResultList();
   } 
 }

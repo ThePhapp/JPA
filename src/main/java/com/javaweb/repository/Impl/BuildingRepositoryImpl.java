@@ -6,6 +6,7 @@ import javax.persistence.EntityManager;
 import javax.persistence.PersistenceContext;
 import javax.persistence.Query;
 
+import org.springframework.context.annotation.Primary;
 import org.springframework.stereotype.Repository;
 
 import com.javaweb.builder.BuildingSearchBuilder;
@@ -13,6 +14,7 @@ import com.javaweb.repository.BuildingRepository;
 import com.javaweb.repository.Entity.BuildingEntity;
 
 @Repository
+@Primary
 public class BuildingRepositoryImpl implements BuildingRepository{
 
 	@PersistenceContext

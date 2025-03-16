@@ -3,23 +3,16 @@ package com.javaweb.service.Impl;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
-import java.util.stream.Collectors;
 
-import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.bind.annotation.RequestParam;
 
 import com.javaweb.Model.BuildingDTO;
 import com.javaweb.builder.BuildingSearchBuilder;
 import com.javaweb.converter.BuildingDTOConverter;
 import com.javaweb.converter.BuildingSearchBuilderConverter;
 import com.javaweb.repository.BuildingRepository;
-import com.javaweb.repository.DistrictRepository;
-import com.javaweb.repository.RentAreaRepository;
 import com.javaweb.repository.Entity.BuildingEntity;
-import com.javaweb.repository.Entity.DistrictEntity;
-import com.javaweb.repository.Entity.RentAreaEntity;
 import com.javaweb.service.BuildingService;
 
 @Service
